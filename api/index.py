@@ -386,10 +386,19 @@ def search_tanks( q: str = Query(..., min_length=1)):
     results = []
     for tank in tanks:
         searchable_text = (
-            f"{tank['make']} "
+            f"{tank['country']} "
+            f"{tank['manufacturer']} "
             f"{tank['model']} "
-            f"{tank['year']} "
+            f"{tank['type']}"
+            f"{tank['year_introduced']}"
+            f"{tank['weight_tons']}"
+            f"{tank['crew']}"
             f"{tank['engine']}"
+            f"{tank['horsepower']}"
+            f"{tank['max_speed_kmh']}"
+            f"{tank['range_km']}"
+            f"{tank['armor_type']}"
+            f"{tank['description']}"
         ).lower()
 
         if q in searchable_text:
