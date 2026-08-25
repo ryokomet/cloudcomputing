@@ -1,9 +1,7 @@
 const API_URL = "https://ryokomet-cloudcomputing.vercel.app";
 
 
-// ================================
 // API REQUEST HELPER
-// ================================
 
 async function fetchAPI(endpoint) {
     const response = await fetch(`${API_URL}${endpoint}`);
@@ -16,9 +14,7 @@ async function fetchAPI(endpoint) {
 }
 
 
-// ================================
 // GET ALL TANKS
-// ================================
 
 async function loadTanks() {
     const tankList = document.getElementById("tankList");
@@ -40,9 +36,7 @@ async function loadTanks() {
 }
 
 
-// ================================
 // DISPLAY TANKS
-// ================================
 
 function displayTanks(tanks) {
     const tankList = document.getElementById("tankList");
@@ -97,9 +91,7 @@ function displayTanks(tanks) {
 }
 
 
-// ================================
 // GET ONE TANK
-// ================================
 
 async function viewTank(id) {
 
@@ -152,9 +144,7 @@ ${tank.description}
 }
 
 
-// ================================
 // SEARCH TANKS
-// ================================
 
 async function searchTanks() {
 
@@ -195,9 +185,7 @@ async function searchTanks() {
 }
 
 
-// ================================
 // START APPLICATION
-// ================================
 
 loadTanks();
 
