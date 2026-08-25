@@ -1,90 +1,212 @@
 const API_URL = "https://ryokomet-cloudcomputing.vercel.app";
 
 
+// ================================
+// API REQUEST HELPER
+// ================================
+
+async function fetchAPI(endpoint) {
+    const response = await fetch(`${API_URL}${endpoint}`);
+
+    if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+    }
+
+    return await response.json();
+}
+
+
+// ================================
 // GET ALL TANKS
+// ================================
+
 async function loadTanks() {
+    const tankList = document.getElementById("tankList");
+
+    tankList.innerHTML = "<p>Loading tanks...</p>";
+
     try {
-        const response = await fetch(`${API_URL}/tanks`);
-        const data = await response.json();
+        const data = await fetchAPI("/tanks");
+
         displayTanks(data.tanks);
     }
 
     catch (error) {
-        console.error(error);
-        document.getElementById("tankList").innerHTML = "Unable to connect to the API.";
+        console.error("Failed to load tanks:", error);
+
+        tankList.innerHTML =
+            "<p>Unable to connect to the API.</p>";
     }
 }
 
 
+// ================================
 // DISPLAY TANKS
+// ================================
+
 function displayTanks(tanks) {
-    const tankList =
-        document.getElementById("tankList");
+    const tankList = document.getElementById("tankList");
 
     tankList.innerHTML = "";
 
+    if (!tanks || tanks.length === 0) {
+        tankList.innerHTML = "<p>No tanks found.</p>";
+        return;
+    }
+
     tanks.forEach(tank => {
+
         const card = document.createElement("div");
+
         card.className = "tank-card";
+
         card.innerHTML = `
-            <div class="tank-year">${tank.year_introduced}</div>
-            <h3>${tank.model} ${tank.model}</h3>
-            <p class="tank-engine">${tank.engine}</p>
-            <p>${tank.horsepower} horsepower/p>
-            <p>${tank.description}</p>
-            <button onclick="viewTank(${tank.id})"> View Details</button>
+            <div class="tank-year">
+                ${tank.year_introduced}
+            </div>
+
+            <h3>${tank.model}</h3>
+
+            <p class="tank-country">
+                ${tank.country}
+            </p>
+
+            <p class="tank-type">
+                ${tank.type}
+            </p>
+
+            <p class="tank-engine">
+                Engine: ${tank.engine}
+            </p>
+
+            <p>
+                ${tank.horsepower} horsepower
+            </p>
+
+            <p>
+                ${tank.description}
+            </p>
+
+            <button onclick="viewTank(${tank.id})">
+                View Details
+            </button>
         `;
 
         tankList.appendChild(card);
     });
-
 }
 
+
+// ================================
 // GET ONE TANK
+// ================================
+
 async function viewTank(id) {
 
     try {
-        const response = await fetch(`${API_URL}/tanks/${id}`);
-        const tank = await response.json();
+        const tank = await fetchAPI(`/tanks/${id}`);
 
         alert(`
-            ${tank.year} ${tank.weight_tons} ${tank.model}
-            Engine:
-            ${tank.engine}
+${tank.year_introduced} ${tank.model}
 
-            Model:
-            ${tank.model}
+Country:
+${tank.country}
 
-            Description:
-            ${tank.description}
+Manufacturer:
+${tank.manufacturer}
+
+Type:
+${tank.type}
+
+Weight:
+${tank.weight_tons} tons
+
+Crew:
+${tank.crew}
+
+Engine:
+${tank.engine}
+
+Horsepower:
+${tank.horsepower}
+
+Maximum Speed:
+${tank.max_speed_kmh} km/h
+
+Range:
+${tank.range_km} km
+
+Armor:
+${tank.armor_type}
+
+Description:
+${tank.description}
         `);
     }
+
     catch (error) {
-        console.error(error);
+        console.error("Failed to retrieve tank:", error);
+
         alert("Unable to retrieve tank.");
     }
-
 }
 
-// SEARCH
+
+// ================================
+// SEARCH TANKS
+// ================================
+
 async function searchTanks() {
 
-    const query = document.getElementById("searchInput").value;
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const query = searchInput.value.trim();
+
+    // Empty search = show everything
     if (!query) {
         loadTanks();
         return;
     }
+
+    const tankList =
+        document.getElementById("tankList");
+
+    tankList.innerHTML = "<p>Searching...</p>";
+
     try {
-        const response =
-            await fetch(`${API_URL}/tanks/search?q=${encodeURIComponent(query)}`);
-        const data = await response.json();
+
+        const data =
+            await fetchAPI(
+                `/tanks/search?q=${encodeURIComponent(query)}`
+            );
+
         displayTanks(data.results);
+
     }
 
     catch (error) {
-        console.error(error);
-        alert("Search failed.");
+
+        console.error("Search failed:", error);
+
+        tankList.innerHTML =
+            "<p>Search failed. Please try again.</p>";
     }
 }
 
+
+// ================================
+// START APPLICATION
+// ================================
+
 loadTanks();
+
+document
+    .getElementById("searchInput")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            searchTanks();
+        }
+
+    });
