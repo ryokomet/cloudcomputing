@@ -364,21 +364,6 @@ def get_cars():
         "tanks": tanks
     }
 
-
-# GET ONE TANK
-@app.get("/tanks/{tank_id}")
-def get_tank(tank_id: int):
-
-    for tank in tanks:
-
-        if tank["id"] == tank_id:
-            return tank
-
-    raise HTTPException(
-        status_code=404,
-        detail="Tank not found."
-    )
-
 # SEARCH TANKS
 @app.get("/tanks/search")
 def search_tanks( q: str = Query(..., min_length=1)):
@@ -386,7 +371,6 @@ def search_tanks( q: str = Query(..., min_length=1)):
     results = []
     for tank in tanks:
         searchable_text = (
-            f"{tank['id']}"
             f"{tank['country']} "
             f"{tank['manufacturer']} "
             f"{tank['model']} "
@@ -410,3 +394,17 @@ def search_tanks( q: str = Query(..., min_length=1)):
         "count": len(results),
         "results": results
     }
+
+# GET ONE TANK
+@app.get("/tanks/{tank_id}")
+def get_tank(tank_id: int):
+
+    for tank in tanks:
+
+        if tank["id"] == tank_id:
+            return tank
+
+    raise HTTPException(
+        status_code=404,
+        detail="Tank not found."
+    )
