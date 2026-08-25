@@ -386,6 +386,7 @@ def search_tanks( q: str = Query(..., min_length=1)):
     results = []
     for tank in tanks:
         searchable_text = (
+            f"{tank['id']}"
             f"{tank['country']} "
             f"{tank['manufacturer']} "
             f"{tank['model']} "
