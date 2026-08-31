@@ -71,10 +71,6 @@ function displayPlants(plants) {
                 ${plant.description}
             </p>
 
-            <p>
-                ${plant.description}
-            </p>
-
             <button onclick="viewPlant(${plant.id})">
                 View Details
             </button>
@@ -93,8 +89,6 @@ async function viewPlant(id) {
         const plant = await fetchAPI(`/plants/${id}`);
 
         alert(`
-${plant.year_introduced} ${plant.common_name}
-
 Common Name:
 ${plant.common_name}
 
@@ -105,10 +99,10 @@ Family:
 ${plant.family}
 
 Genus:
-${plant.type}
+${plant.genus}
 
 Plant Type:
-${plant.type}
+${plant.plant_type}
 
 Origin:
 ${plant.origin}

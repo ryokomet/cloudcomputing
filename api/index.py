@@ -39,6 +39,27 @@ plants = [
         "toxicity": "Non-toxic",
         "description": "A widely cultivated flowering plant known for its fragrant and colorful flowers and thorny stems."
     },
+    {
+        "id": 2,
+        "common_name": "Sunflower",
+        "scientific_name": "Helianthus annuus",
+        "family": "Asteraceae",
+        "genus": "Helianthus",
+        "plant_type": "Annual Herb",
+        "origin": "North America",
+        "habitat": "Grasslands, fields, agricultural areas",
+        "lifespan": "Annual",
+        "height_m": 3.0,
+        "spread_m": 0.6,
+        "sunlight": "Full Sun",
+        "water_requirement": "Moderate",
+        "soil_type": "Well-drained fertile soil",
+        "flower_color": "Yellow",
+        "flowering_season": "Summer",
+        "uses": "Oil production, food, ornamental",
+        "toxicity": "Non-toxic",
+        "description": "A tall annual plant recognized by its large yellow flower head and edible seeds."
+    },
 
 ]
 
