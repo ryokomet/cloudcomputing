@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException, Header, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="Simple Tank API",
-    description="A beginner-friendly REST API containing information about tanks.",
+    title="Simple Plant API",
+    description="A beginner-friendly REST API containing information about plants.",
     version="1.0.0"
 )
 
@@ -15,24 +15,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# CAR DATA
-tanks = [
+# PLANT DATA
+plants = [
 
     {
         "id": 1,
-        "country": "Germany",
-        "manufacturer": "Krauss-Maffei Wegmann",
-        "model": "Leopard 2A7",
-        "type": "Main Battle Tank",
-        "year_introduced": 2014,
-        "weight_tons": 66.5,
-        "crew": 4,
-        "engine": "MTU MB 873 Ka-501",
-        "horsepower": 1500,
-        "max_speed_kmh": 68,
-        "range_km": 340,
-        "armor_type": "Composite armor",
-        "description": "A modern German main battle tank emphasizing protection, mobility, and advanced battlefield systems."
+        "common_name": "Rose",
+        "scientific_name": "Rosa",
+        "family": "Rosaceae",
+        "genus": "Rosa",
+        "plant_type": "Flowering Plant",
+        "origin": "Asia, Europe, North America, and Northwest Africa",
+        "habitat": "Gardens, temperate forests, grasslands",
+        "lifespan": "Perennial",
+        "height_m": 2.0,
+        "spread_m": 1.5,
+        "sunlight": "Full Sun",
+        "water_requirement": "Moderate",
+        "soil_type": "Well-drained loamy soil",
+        "flower_color": "Red, pink, white, yellow, orange",
+        "flowering_season": "Spring to Autumn",
+        "uses": "Ornamental, perfume, cosmetics",
+        "toxicity": "Non-toxic",
+        "description": "A widely cultivated flowering plant known for its fragrant and colorful flowers and thorny stems."
     },
 
 ]
@@ -42,48 +47,53 @@ tanks = [
 def home():
 
     return {
-        "message": "Welcome to the Simple Tank API!",
+        "message": "Welcome to the Simple Plant API!",
         "endpoints": [
-            "/tanks",
-            "/tanks/{id}",
-            "/tanks/search"
+            "/plants",
+            "/plants/{id}",
+            "/plants/search"
         ]
     }
 
 
-# GET ALL TANKS
-@app.get("/tanks")
-def get_cars():
+# GET ALL PLANTS
+@app.get("/plants")
+def get_plants():
 
     return {
-        "count": len(tanks),
-        "tanks": tanks
+        "count": len(plants),
+        "plants": plants
     }
 
-# SEARCH TANKS
-@app.get("/tanks/search")
-def search_tanks( q: str = Query(..., min_length=1)):
+# SEARCH PLANTS
+@app.get("/plants/search")
+def search_plants( q: str = Query(..., min_length=1)):
     q = q.lower()
     results = []
-    for tank in tanks:
+    for plant in plants:
         searchable_text = (
-            f"{tank['country']} "
-            f"{tank['manufacturer']} "
-            f"{tank['model']} "
-            f"{tank['type']}"
-            f"{tank['year_introduced']}"
-            f"{tank['weight_tons']}"
-            f"{tank['crew']}"
-            f"{tank['engine']}"
-            f"{tank['horsepower']}"
-            f"{tank['max_speed_kmh']}"
-            f"{tank['range_km']}"
-            f"{tank['armor_type']}"
-            f"{tank['description']}"
+            f"{plant['common_name']} "
+            f"{plant['scientific_name']} "
+            f"{plant['family']} "
+            f"{plant['genus']}"
+            f"{plant['plant_type']}"
+            f"{plant['origin']}"
+            f"{plant['habitat']}"
+            f"{plant['lifespan']}"
+            f"{plant['height_m']}"
+            f"{plant['spread_m']}"
+            f"{plant['sunlight']}"
+            f"{plant['water_requirement']}"
+            f"{plant['soil_type']}"
+            f"{plant['flower_color']}"
+            f"{plant['flowering_season']}"
+            f"{plant['uses']}"
+            f"{plant['toxicity']}"
+            f"{plant['description']}"
         ).lower()
 
         if q in searchable_text:
-            results.append(tank)
+            results.append(plant)
 
     return {
         "query": q,
@@ -91,16 +101,16 @@ def search_tanks( q: str = Query(..., min_length=1)):
         "results": results
     }
 
-# GET ONE TANK
-@app.get("/tanks/{tank_id}")
-def get_tank(tank_id: int):
+# GET ONE PLANT
+@app.get("/plants/{plant_id}")
+def get_plant(plant_id: int):
 
-    for tank in tanks:
+    for plant in plants:
 
-        if tank["id"] == tank_id:
-            return tank
+        if plant["id"] == plant_id:
+            return plant
 
     raise HTTPException(
         status_code=404,
-        detail="Tank not found."
+        detail="plant not found."
     )

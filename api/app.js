@@ -14,139 +14,156 @@ async function fetchAPI(endpoint) {
 }
 
 
-// GET ALL TANKS
+// GET ALL PLANTS
 
-async function loadTanks() {
-    const tankList = document.getElementById("tankList");
+async function loadPlants() {
+    const plantList = document.getElementById("plantList");
 
-    tankList.innerHTML = "<p>Loading tanks...</p>";
+    plantList.innerHTML = "<p>Loading plants...</p>";
 
     try {
-        const data = await fetchAPI("/tanks");
+        const data = await fetchAPI("/plants");
 
-        displayTanks(data.tanks);
+        displayPlants(data.plants);
     }
 
     catch (error) {
-        console.error("Failed to load tanks:", error);
+        console.error("Failed to load plants:", error);
 
-        tankList.innerHTML =
+        plantList.innerHTML =
             "<p>Unable to connect to the API.</p>";
     }
 }
 
 
-// DISPLAY TANKS
+// DISPLAY PLANTS
 
-function displayTanks(tanks) {
-    const tankList = document.getElementById("tankList");
+function displayPlants(plants) {
+    const plantList = document.getElementById("plantList");
 
-    tankList.innerHTML = "";
+    plantList.innerHTML = "";
 
-    if (!tanks || tanks.length === 0) {
-        tankList.innerHTML = "<p>No tanks found.</p>";
+    if (!plants || plants.length === 0) {
+        plantList.innerHTML = "<p>No plants found.</p>";
         return;
     }
 
-    tanks.forEach(tank => {
+    plants.forEach(plant => {
 
         const card = document.createElement("div");
 
-        card.className = "tank-card";
+        card.className = "plant-card";
 
         card.innerHTML = `
-            <div class="tank-year">
-                ${tank.year_introduced}
+            <div class="plant-year">
+                ${plant.year_introduced}
             </div>
 
-            <h3>${tank.model}</h3>
+            <h3>${plant.common_name}</h3>
 
-            <p class="tank-country">
-                ${tank.country}
+            <p class="plant-scientific">
+                ${plant.scientific_name}
             </p>
 
-            <p class="tank-type">
-                ${tank.type}
+            <p class="plant-family">
+                ${plant.family}
             </p>
 
-            <p class="tank-engine">
-                Engine: ${tank.engine}
-            </p>
-
-            <p>
-                ${tank.horsepower} horsepower
+            <p class="plant-description">
+                ${plant.description}
             </p>
 
             <p>
-                ${tank.description}
+                ${plant.description}
             </p>
 
-            <button onclick="viewTank(${tank.id})">
+            <button onclick="viewPlant(${plant.id})">
                 View Details
             </button>
         `;
 
-        tankList.appendChild(card);
+        plantList.appendChild(card);
     });
 }
 
 
-// GET ONE TANK
+// GET ONE PLANT
 
-async function viewTank(id) {
+async function viewPlant(id) {
 
     try {
-        const tank = await fetchAPI(`/tanks/${id}`);
+        const plant = await fetchAPI(`/plants/${id}`);
 
         alert(`
-${tank.year_introduced} ${tank.model}
+${plant.year_introduced} ${plant.common_name}
 
-Country:
-${tank.country}
+Common Name:
+${plant.common_name}
 
-Manufacturer:
-${tank.manufacturer}
+Scientific Name:
+${plant.scientific_name}
 
-Type:
-${tank.type}
+Family:
+${plant.family}
 
-Weight:
-${tank.weight_tons} tons
+Genus:
+${plant.type}
 
-Crew:
-${tank.crew}
+Plant Type:
+${plant.type}
 
-Engine:
-${tank.engine}
+Origin:
+${plant.origin}
 
-Horsepower:
-${tank.horsepower}
+Habitat:
+${plant.habitat}
 
-Maximum Speed:
-${tank.max_speed_kmh} km/h
+Lifespan:
+${plant.lifespan}
 
-Range:
-${tank.range_km} km
+Height M:
+${plant.height_m} m
 
-Armor:
-${tank.armor_type}
+Spread M:
+${plant.spread_m} m
+
+Sunlight:
+${plant.sunlight}
+
+Water Requirement:
+${plant.water_requirement}
+
+Soil Type:
+${plant.soil_type}
+
+Flower Color:
+${plant.flower_color}
+
+Flowering Season:
+${plant.flowering_season}
+
+Uses:
+${plant.uses}
+
+Toxicity:
+${plant.toxicity}
 
 Description:
-${tank.description}
+${plant.description}
         `);
     }
 
     catch (error) {
-        console.error("Failed to retrieve tank:", error);
+        console.error("Failed to retrieve plant:", error);
 
-        alert("Unable to retrieve tank.");
+        alert("Unable to retrieve plant.");
     }
 }
 
 
-// SEARCH TANKS
+// SEARCH PLANTS
 
-async function searchTanks() {
+async function searchPlants() {
 
     const searchInput =
         document.getElementById("searchInput");
@@ -155,23 +172,23 @@ async function searchTanks() {
 
     // Empty search = show everything
     if (!query) {
-        loadTanks();
+        loadPlants();
         return;
     }
 
-    const tankList =
-        document.getElementById("tankList");
+    const plantList =
+        document.getElementById("plantList");
 
-    tankList.innerHTML = "<p>Searching...</p>";
+    plantList.innerHTML = "<p>Searching...</p>";
 
     try {
 
         const data =
             await fetchAPI(
-                `/tanks/search?q=${encodeURIComponent(query)}`
+                `/plants/search?q=${encodeURIComponent(query)}`
             );
 
-        displayTanks(data.results);
+        displayPlants(data.results);
 
     }
 
@@ -179,7 +196,7 @@ async function searchTanks() {
 
         console.error("Search failed:", error);
 
-        tankList.innerHTML =
+        plantList.innerHTML =
             "<p>Search failed. Please try again.</p>";
     }
 }
@@ -187,14 +204,14 @@ async function searchTanks() {
 
 // START APPLICATION
 
-loadTanks();
+loadPlants();
 
 document
     .getElementById("searchInput")
     .addEventListener("keydown", function(event) {
 
         if (event.key === "Enter") {
-            searchTanks();
+            searchPlants();
         }
 
     });

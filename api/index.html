@@ -5,36 +5,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Tank Finder</title>
+    <title>Simple Plant Finder</title>
     <link rel="stylesheet" href="style.css" >
 </head>
 
 
 <body>
     <header>
-        <h1>Simple Tank Finder</h1>
+        <h1>Simple Plant Finder</h1>
         <p> A website powered by a REST API </p>
     </header>
     <main>
 
         <!-- SEARCH -->
         <section class="search">
-            <input type="text" id="searchInput" placeholder="Search for a tank...">
-            <button onclick="searchTanks()"> Search </button>
-            <button class="secondary" onclick="loadTanks()"> Show All </button>
+            <input type="text" id="searchInput" placeholder="Search for a plant...">
+            <button onclick="searchPlants()"> Search </button>
+            <button class="secondary" onclick="loadPlants()"> Show All </button>
 
         </section>
 
         <section>
-            <h2>Tanks</h2>
-            <div id="tankList" class="tank-list">
-                Loading tanks...
+            <h2>Plants</h2>
+            <div id="plantList" class="plant-list">
+                Loading plants...
             </div>
         </section>
     </main>
 
     <footer>
-        <p> Data provided by the Simple Tank API </p>
+        <p> Data provided by the Simple Plant API </p>
     </footer>
     <script src="app.js"></script>
 </body>
