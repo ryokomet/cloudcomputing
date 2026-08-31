@@ -55,11 +55,9 @@ function displayPlants(plants) {
         card.className = "plant-card";
 
         card.innerHTML = `
-            <div class="plant-year">
-                ${plant.year_introduced}
+            <div class="plant-common-name">
+                ${plant.common_name}
             </div>
-
-            <h3>${plant.common_name}</h3>
 
             <p class="plant-scientific">
                 ${plant.scientific_name}
