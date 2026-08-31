@@ -57,36 +57,45 @@ button.secondary {
     background: #555;
 }
 
-/* Tank grid */
-.tank-list {
+/* Plant grid */
+.plant-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
-/* Tank cards */
-.tank-card {
+/* Plant cards */
+.plant-card {
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.tank-card h3 {
+.plant-card h3 {
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-.tank-year {
+.plant-year {
     color: #e63946;
     font-weight: bold;
 }
 
-.tank-engine {
+.plant-scientific {
+    color: #666;
+    font-style: italic;
+}
+
+.plant-family {
     color: #666;
 }
 
-.tank-card button {
+.plant-description {
+    margin-top: 10px;
+}
+
+.plant-card button {
     margin-top: 10px;
     width: 100%;
 }
