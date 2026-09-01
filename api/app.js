@@ -25,7 +25,7 @@ async function fetchAPI(endpoint) {
 async function loadPlants() {
     const plantList = document.getElementById("plantList");
 
-    plantList.innerHTML = "<p>Loading plants...</p>";
+    plantList.innerHTML = "<p class=\"loading-text\">Loading plants...</p>";
 
     try {
         const data = await fetchAPI("/plants");
@@ -208,7 +208,7 @@ async function searchPlants() {
     const plantList =
         document.getElementById("plantList");
 
-    plantList.innerHTML = "<p>Searching...</p>";
+    plantList.innerHTML = "<p class=\"loading-text\">Searching...</p>";
 
     try {
 

@@ -264,12 +264,12 @@ footer {
     overflow-y: auto;
     position: relative;
     box-shadow: 0 10px 40px rgba(31, 46, 28, 0.3);
-    transform: translateY(10px);
+    transform: translateY(10px) scale(0.97);
     transition: transform 0.2s ease;
 }
 
 .modal-overlay.open .modal-box {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .modal-close {
@@ -364,8 +364,34 @@ footer {
     font-size: 0.92rem;
 }
 
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.plant-card {
+    animation: cardIn 0.4s ease both;
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+}
+
+.loading-text {
+    color: var(--color-ink-muted);
+    animation: textPulse 1.3s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
     * {
         transition: none !important;
+        animation: none !important;
     }
 }
