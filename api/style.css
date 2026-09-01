@@ -3,21 +3,30 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     background: #f4f4f4;
     color: #222;
+    line-height: 1.5;
 }
 
 header {
     background: #222;
     color: white;
     text-align: center;
-    padding: 40px 20px;
+    padding: 48px 20px;
 }
 
 header h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+}
+
+header p {
     margin: 0;
+    color: #bbb;
+    font-size: 0.95rem;
 }
 
 main {
@@ -29,79 +38,135 @@ main {
 .search {
     display: flex;
     gap: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 36px;
 }
 
 .search input {
     flex: 1;
-    padding: 12px;
+    padding: 12px 16px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search input:focus {
+    outline: none;
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.12);
 }
 
 button {
-    padding: 12px 18px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     background: #e63946;
     color: white;
+    font-size: 15px;
     cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
 }
 
 button:hover {
     background: #c92f3b;
 }
 
+button:active {
+    transform: scale(0.98);
+}
+
 button.secondary {
     background: #555;
+}
+
+button.secondary:hover {
+    background: #444;
+}
+
+h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
 }
 
 /* Plant grid */
 .plant-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
 }
 
 /* Plant cards */
 .plant-card {
     background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.plant-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.plant-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #eee;
+    overflow: hidden;
+}
+
+.plant-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.plant-card-body {
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .plant-card h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.plant-year {
-    color: #e63946;
-    font-weight: bold;
+    margin: 0 0 4px;
+    font-size: 1.15rem;
 }
 
 .plant-scientific {
-    color: #666;
+    color: #888;
     font-style: italic;
+    font-size: 0.9rem;
+    margin: 0 0 6px;
 }
 
 .plant-family {
-    color: #666;
+    color: #999;
+    font-size: 0.85rem;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .plant-description {
-    margin-top: 10px;
+    color: #444;
+    font-size: 0.92rem;
+    margin: 0 0 16px;
+    flex: 1;
 }
 
 .plant-card button {
-    margin-top: 10px;
     width: 100%;
 }
 
 footer {
     text-align: center;
-    padding: 30px;
-    color: #777;
+    padding: 32px 20px;
+    color: #999;
+    font-size: 0.85rem;
 }

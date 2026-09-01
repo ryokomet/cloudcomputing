@@ -38,6 +38,10 @@ async function loadPlants() {
 
 // DISPLAY PLANTS
 
+function slugify(text) {
+    return text.toLowerCase().trim().replace(/\s+/g, '-');
+}
+
 function displayPlants(plants) {
     const plantList = document.getElementById("plantList");
 
@@ -55,25 +59,31 @@ function displayPlants(plants) {
         card.className = "plant-card";
 
         card.innerHTML = `
-            <div class="plant-common-name">
-                ${plant.common_name}
+            <div class="plant-image">
+                <img src="images/${slugify(plant.common_name)}.jpg"
+                     alt="${plant.common_name}"
+                     onerror="this.onerror=null;this.src='images/placeholder.jpg';">
             </div>
 
-            <p class="plant-scientific">
-                ${plant.scientific_name}
-            </p>
+            <div class="plant-card-body">
+                <h3>${plant.common_name}</h3>
 
-            <p class="plant-family">
-                ${plant.family}
-            </p>
+                <p class="plant-scientific">
+                    ${plant.scientific_name}
+                </p>
 
-            <p class="plant-description">
-                ${plant.description}
-            </p>
+                <p class="plant-family">
+                    ${plant.family}
+                </p>
 
-            <button onclick="viewPlant(${plant.id})">
-                View Details
-            </button>
+                <p class="plant-description">
+                    ${plant.description}
+                </p>
+
+                <button onclick="viewPlant(${plant.id})">
+                    View Details
+                </button>
+            </div>
         `;
 
         plantList.appendChild(card);
