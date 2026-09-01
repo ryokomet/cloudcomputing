@@ -98,69 +98,62 @@ async function viewPlant(id) {
     try {
         const plant = await fetchAPI(`/plants/${id}`);
 
-        alert(`
-Common Name:
-${plant.common_name}
+        document.getElementById("modalImage").src =
+            `images/${slugify(plant.common_name)}.jpg`;
+        document.getElementById("modalImage").onerror = function() {
+            this.onerror = null;
+            this.src = "images/placeholder.jpg";
+        };
+        document.getElementById("modalImage").alt = plant.common_name;
 
-Scientific Name:
-${plant.scientific_name}
+        document.getElementById("modalContent").innerHTML = `
+            <h2>${plant.common_name}</h2>
+            <p class="modal-scientific">${plant.scientific_name}</p>
 
-Family:
-${plant.family}
+            <div class="modal-row"><span>Family</span><span>${plant.family}</span></div>
+            <div class="modal-row"><span>Genus</span><span>${plant.genus}</span></div>
+            <div class="modal-row"><span>Plant Type</span><span>${plant.plant_type}</span></div>
+            <div class="modal-row"><span>Origin</span><span>${plant.origin}</span></div>
+            <div class="modal-row"><span>Habitat</span><span>${plant.habitat}</span></div>
+            <div class="modal-row"><span>Lifespan</span><span>${plant.lifespan}</span></div>
+            <div class="modal-row"><span>Height</span><span>${plant.height_m} m</span></div>
+            <div class="modal-row"><span>Spread</span><span>${plant.spread_m} m</span></div>
+            <div class="modal-row"><span>Sunlight</span><span>${plant.sunlight}</span></div>
+            <div class="modal-row"><span>Water</span><span>${plant.water_requirement}</span></div>
+            <div class="modal-row"><span>Soil Type</span><span>${plant.soil_type}</span></div>
+            <div class="modal-row"><span>Flower Color</span><span>${plant.flower_color}</span></div>
+            <div class="modal-row"><span>Flowering Season</span><span>${plant.flowering_season}</span></div>
+            <div class="modal-row"><span>Uses</span><span>${plant.uses}</span></div>
+            <div class="modal-row"><span>Toxicity</span><span>${plant.toxicity}</span></div>
 
-Genus:
-${plant.genus}
+            <p class="modal-description">${plant.description}</p>
+        `;
 
-Plant Type:
-${plant.plant_type}
-
-Origin:
-${plant.origin}
-
-Habitat:
-${plant.habitat}
-
-Lifespan:
-${plant.lifespan}
-
-Height M:
-${plant.height_m} m
-
-Spread M:
-${plant.spread_m} m
-
-Sunlight:
-${plant.sunlight}
-
-Water Requirement:
-${plant.water_requirement}
-
-Soil Type:
-${plant.soil_type}
-
-Flower Color:
-${plant.flower_color}
-
-Flowering Season:
-${plant.flowering_season}
-
-Uses:
-${plant.uses}
-
-Toxicity:
-${plant.toxicity}
-
-Description:
-${plant.description}
-        `);
+        openModal();
     }
 
     catch (error) {
         console.error("Failed to retrieve plant:", error);
-
         alert("Unable to retrieve plant.");
     }
 }
+
+function openModal() {
+    document.getElementById("plantModal").classList.add("open");
+}
+
+function closeModal() {
+    document.getElementById("plantModal").classList.remove("open");
+}
+
+// close modal on overlay click or Escape key
+document.getElementById("plantModal").addEventListener("click", function(event) {
+    if (event.target === this) closeModal();
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") closeModal();
+});
 
 
 // SEARCH PLANTS

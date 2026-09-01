@@ -170,3 +170,117 @@ footer {
     color: #999;
     font-size: 0.85rem;
 }
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.modal-overlay.open {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 10px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    transform: translateY(10px);
+    transition: transform 0.2s ease;
+}
+
+.modal-overlay.open .modal-box {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #eee;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.modal-content {
+    padding: 24px;
+}
+
+.modal-content h2 {
+    margin: 0 0 4px;
+}
+
+.modal-content .modal-scientific {
+    color: #888;
+    font-style: italic;
+    margin: 0 0 16px;
+}
+
+.modal-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+}
+
+.modal-row:last-of-type {
+    border-bottom: none;
+}
+
+.modal-row span:first-child {
+    color: #888;
+}
+
+.modal-row span:last-child {
+    text-align: right;
+    font-weight: 500;
+}
+
+.modal-description {
+    margin-top: 16px;
+    color: #444;
+    font-size: 0.92rem;
+}
