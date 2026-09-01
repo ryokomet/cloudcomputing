@@ -1,28 +1,39 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Plant Finder</title>
-    <link rel="stylesheet" href="style.css" >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
     <header>
-        <h1>Simple Plant Finder</h1>
-        <p> A website powered by a REST API </p>
+        <div class="brand">
+            <svg class="brand-icon" viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M24 42V14"/>
+                <path d="M24 14c0-7 5-11 12-11-1 7-5 12-12 12"/>
+                <path d="M24 22c0-6-5-9-11-9 1 6 5 10 11 10"/>
+                <path d="M24 30c0-5-4-8-9-8 1 5 4 8 9 8"/>
+            </svg>
+            <div class="brand-text">
+                <h1>Simple Plant Finder</h1>
+                <p>A quick-reference field guide to common garden and houseplants. Powered by REST API</p>
+            </div>
+        </div>
     </header>
+
     <main>
 
         <!-- SEARCH -->
         <section class="search">
             <input type="text" id="searchInput" placeholder="Search for a plant...">
-            <button onclick="searchPlants()"> Search </button>
-            <button class="secondary" onclick="loadPlants()"> Show All </button>
-
+            <button onclick="searchPlants()">Search</button>
+            <button class="secondary" onclick="loadPlants()">Show all</button>
         </section>
 
         <section>
@@ -34,13 +45,13 @@
     </main>
 
     <footer>
-        <p> Data provided by the Simple Plant API </p>
+        <p>Data provided by the Simple Plant API</p>
     </footer>
 
     <!-- PLANT DETAILS MODAL -->
     <div id="plantModal" class="modal-overlay">
         <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
             <div class="modal-image">
                 <img id="modalImage" src="" alt="">
             </div>

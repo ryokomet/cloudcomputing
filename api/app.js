@@ -1,5 +1,11 @@
 const API_URL = "https://ryokomet-cloudcomputing.vercel.app";
 
+// ICONS
+
+const ICON_SUN = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>`;
+
+const ICON_DROP = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 7.2 6 11.2A6 6 0 0 1 6 14.2C6 10.2 12 3 12 3z"/></svg>`;
+
 
 // API REQUEST HELPER
 
@@ -36,11 +42,21 @@ async function loadPlants() {
 }
 
 
-// DISPLAY PLANTS
+// HELPERS
 
 function slugify(text) {
     return text.toLowerCase().trim().replace(/\s+/g, '-');
 }
+
+function toxicityClass(text) {
+    const t = (text || "").toLowerCase();
+    if (t.includes("non-toxic")) return "tox-safe";
+    if (t.includes("toxic")) return "tox-warn";
+    return "";
+}
+
+
+// DISPLAY PLANTS
 
 function displayPlants(plants) {
     const plantList = document.getElementById("plantList");
@@ -66,22 +82,25 @@ function displayPlants(plants) {
             </div>
 
             <div class="plant-card-body">
+                <span class="plant-tag">${plant.family}</span>
+
                 <h3>${plant.common_name}</h3>
 
                 <p class="plant-scientific">
                     ${plant.scientific_name}
                 </p>
 
-                <p class="plant-family">
-                    ${plant.family}
-                </p>
+                <div class="plant-meta">
+                    <span class="meta-item"><span class="meta-icon">${ICON_SUN}</span>${plant.sunlight}</span>
+                    <span class="meta-item"><span class="meta-icon">${ICON_DROP}</span>${plant.water_requirement}</span>
+                </div>
 
                 <p class="plant-description">
                     ${plant.description}
                 </p>
 
                 <button onclick="viewPlant(${plant.id})">
-                    View Details
+                    View details
                 </button>
             </div>
         `;
@@ -114,24 +133,27 @@ async function viewPlant(id) {
         modalImage.alt = plant.common_name;
 
         modalContent.innerHTML = `
+            <span class="plant-tag">${plant.family}</span>
             <h2>${plant.common_name}</h2>
             <p class="modal-scientific">${plant.scientific_name}</p>
 
-            <div class="modal-row"><span>Family</span><span>${plant.family}</span></div>
+            <div class="plant-meta modal-quickfacts">
+                <span class="meta-item"><span class="meta-icon">${ICON_SUN}</span>${plant.sunlight}</span>
+                <span class="meta-item"><span class="meta-icon">${ICON_DROP}</span>${plant.water_requirement}</span>
+            </div>
+
             <div class="modal-row"><span>Genus</span><span>${plant.genus}</span></div>
-            <div class="modal-row"><span>Plant Type</span><span>${plant.plant_type}</span></div>
+            <div class="modal-row"><span>Plant type</span><span>${plant.plant_type}</span></div>
             <div class="modal-row"><span>Origin</span><span>${plant.origin}</span></div>
             <div class="modal-row"><span>Habitat</span><span>${plant.habitat}</span></div>
             <div class="modal-row"><span>Lifespan</span><span>${plant.lifespan}</span></div>
             <div class="modal-row"><span>Height</span><span>${plant.height_m} m</span></div>
             <div class="modal-row"><span>Spread</span><span>${plant.spread_m} m</span></div>
-            <div class="modal-row"><span>Sunlight</span><span>${plant.sunlight}</span></div>
-            <div class="modal-row"><span>Water</span><span>${plant.water_requirement}</span></div>
-            <div class="modal-row"><span>Soil Type</span><span>${plant.soil_type}</span></div>
-            <div class="modal-row"><span>Flower Color</span><span>${plant.flower_color}</span></div>
-            <div class="modal-row"><span>Flowering Season</span><span>${plant.flowering_season}</span></div>
+            <div class="modal-row"><span>Soil type</span><span>${plant.soil_type}</span></div>
+            <div class="modal-row"><span>Flower color</span><span>${plant.flower_color}</span></div>
+            <div class="modal-row"><span>Flowering season</span><span>${plant.flowering_season}</span></div>
             <div class="modal-row"><span>Uses</span><span>${plant.uses}</span></div>
-            <div class="modal-row"><span>Toxicity</span><span>${plant.toxicity}</span></div>
+            <div class="modal-row"><span>Toxicity</span><span class="${toxicityClass(plant.toxicity)}">${plant.toxicity}</span></div>
 
             <p class="modal-description">${plant.description}</p>
         `;
