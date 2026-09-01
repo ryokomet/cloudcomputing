@@ -97,15 +97,16 @@ button {
     font-family: inherit;
     font-size: 15px;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
+    transition: background 0.2s ease, transform 0.15s ease;
 }
 
 button:hover {
     background: var(--color-forest-dark);
+    transform: translateY(-1px);
 }
 
 button:active {
-    transform: scale(0.98);
+    transform: scale(0.98) translateY(0);
 }
 
 button:focus-visible {
@@ -145,17 +146,20 @@ h2 {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .plant-card:hover {
     box-shadow: 0 8px 20px rgba(31, 46, 28, 0.12);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
 }
 
 .plant-image {
     padding: 10px;
     background: var(--color-card);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
 }
 
 .plant-image img {
@@ -165,6 +169,11 @@ h2 {
     display: block;
     border-radius: var(--radius-sm);
     background: var(--color-line);
+    transition: transform 0.3s ease;
+}
+
+.plant-card:hover .plant-image img {
+    transform: scale(1.05);
 }
 
 .plant-card-body {
@@ -238,21 +247,22 @@ footer {
 
 /* Modal */
 .modal-overlay {
-    display: none;
     position: fixed;
     inset: 0;
     background: rgba(31, 46, 28, 0.55);
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
     z-index: 1000;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
 .modal-overlay.open {
-    display: flex;
     opacity: 1;
+    visibility: visible;
 }
 
 .modal-box {
@@ -264,12 +274,13 @@ footer {
     overflow-y: auto;
     position: relative;
     box-shadow: 0 10px 40px rgba(31, 46, 28, 0.3);
-    transform: translateY(10px) scale(0.97);
-    transition: transform 0.2s ease;
+    transform: translateY(14px) scale(0.96);
+    transition: transform 0.2s ease-in;
 }
 
 .modal-overlay.open .modal-box {
     transform: translateY(0) scale(1);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-close {
@@ -288,10 +299,12 @@ footer {
     align-items: center;
     justify-content: center;
     z-index: 2;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .modal-close:hover {
     background: rgba(31, 46, 28, 0.8);
+    transform: rotate(90deg);
 }
 
 .modal-image {
