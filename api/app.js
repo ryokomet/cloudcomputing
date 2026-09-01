@@ -98,15 +98,22 @@ async function viewPlant(id) {
     try {
         const plant = await fetchAPI(`/plants/${id}`);
 
-        document.getElementById("modalImage").src =
-            `images/${slugify(plant.common_name)}.jpg`;
-        document.getElementById("modalImage").onerror = function() {
+        const modalImage = document.getElementById("modalImage");
+        const modalContent = document.getElementById("modalContent");
+
+        if (!modalImage || !modalContent) {
+            console.error("Modal elements not found in the page.");
+            return;
+        }
+
+        modalImage.src = `images/${slugify(plant.common_name)}.jpg`;
+        modalImage.onerror = function() {
             this.onerror = null;
             this.src = "images/placeholder.jpg";
         };
-        document.getElementById("modalImage").alt = plant.common_name;
+        modalImage.alt = plant.common_name;
 
-        document.getElementById("modalContent").innerHTML = `
+        modalContent.innerHTML = `
             <h2>${plant.common_name}</h2>
             <p class="modal-scientific">${plant.scientific_name}</p>
 
@@ -139,17 +146,22 @@ async function viewPlant(id) {
 }
 
 function openModal() {
-    document.getElementById("plantModal").classList.add("open");
+    const modal = document.getElementById("plantModal");
+    if (modal) modal.classList.add("open");
 }
 
 function closeModal() {
-    document.getElementById("plantModal").classList.remove("open");
+    const modal = document.getElementById("plantModal");
+    if (modal) modal.classList.remove("open");
 }
 
 // close modal on overlay click or Escape key
-document.getElementById("plantModal").addEventListener("click", function(event) {
-    if (event.target === this) closeModal();
-});
+const plantModalEl = document.getElementById("plantModal");
+if (plantModalEl) {
+    plantModalEl.addEventListener("click", function(event) {
+        if (event.target === this) closeModal();
+    });
+}
 
 document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") closeModal();
@@ -201,12 +213,11 @@ async function searchPlants() {
 
 loadPlants();
 
-document
-    .getElementById("searchInput")
-    .addEventListener("keydown", function(event) {
-
+const searchInputEl = document.getElementById("searchInput");
+if (searchInputEl) {
+    searchInputEl.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             searchPlants();
         }
-
     });
+}
