@@ -29,30 +29,11 @@
 
     <main>
 
-                <!-- SEARCH & FILTERS -->
-        <section class="search-container">
-            <div class="search">
-                <input type="text" id="searchInput" placeholder="Search for a plant...">
-                <button onclick="searchPlants()">Search</button>
-                <button class="secondary" onclick="resetAndLoadAll()">Show all</button>
-            </div>
-
-            <!-- TICK FILTERS -->
-            <div class="filters">
-                <span class="filter-title">Filters:</span>
-                <label class="filter-chip">
-                    <input type="checkbox" id="filterNonToxic" onchange="applyFilters()">
-                    <span>Non-toxic only</span>
-                </label>
-                <label class="filter-chip">
-                    <input type="checkbox" id="filterLowWater" onchange="applyFilters()">
-                    <span>Low water</span>
-                </label>
-                <label class="filter-chip">
-                    <input type="checkbox" id="filterFullSun" onchange="applyFilters()">
-                    <span>Full sun</span>
-                </label>
-            </div>
+        <!-- SEARCH -->
+        <section class="search">
+            <input type="text" id="searchInput" placeholder="Search for a plant...">
+            <button onclick="searchPlants()">Search</button>
+            <button class="secondary" onclick="loadPlants()">Show all</button>
         </section>
 
         <section>
