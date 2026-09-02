@@ -1,14 +1,26 @@
 const API_URL = "https://ryokomet-cloudcomputing.vercel.app";
 
-// ICONS
+// FILTER CONFIGURATION (Dynamic & Scalable)
+const FILTER_CONFIG = [
+    { key: "genus", label: "Genus" },
+    { key: "plant_type", label: "Plant Type" },
+    { key: "origin", label: "Origin" },
+    { key: "habitat", label: "Habitat" },
+    { key: "lifespan", label: "Lifespan" },
+    { key: "height_m", label: "Height", suffix: " m" },
+    { key: "spread_m", label: "Spread", suffix: " m" },
+    { key: "soil_type", label: "Soil Type" },
+    { key: "flower_color", label: "Flower Color" },
+    { key: "flowering_season", label: "Flowering Season" },
+    { key: "uses", label: "Uses" },
+    { key: "toxicity", label: "Toxicity" }
+];
 
-const ICON_SUN = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>`;
-
-const ICON_DROP = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 7.2 6 11.2A6 6 0 0 1 6 14.2C6 10.2 12 3 12 3z"/></svg>`;
+// Stores raw plants returned by loadPlants or searchPlants
+let currentFetchedPlants = [];
 
 
 // API REQUEST HELPER
-
 async function fetchAPI(endpoint) {
     const response = await fetch(`${API_URL}${endpoint}`);
 
@@ -20,58 +32,133 @@ async function fetchAPI(endpoint) {
 }
 
 
-// GET ALL PLANTS
+// FILTER CONTROLS & DYNAMIC POPULATION
 
+// Generate select dropdowns in the grid
+function initFilterControls() {
+    const grid = document.getElementById("filtersGrid");
+    if (!grid) return;
+
+    grid.innerHTML = FILTER_CONFIG.map(config => `
+        <div class="filter-group">
+            <label for="filter-${config.key}">${config.label}</label>
+            <select id="filter-${config.key}" onchange="applyFilters()">
+                <option value="">All ${config.label}s</option>
+            </select>
+        </div>
+    `).join("");
+}
+
+// Extract unique values from loaded dataset and build options without duplicates
+function populateFilterOptions(plants) {
+    FILTER_CONFIG.forEach(config => {
+        const select = document.getElementById(`filter-${config.key}`);
+        if (!select) return;
+
+        const currentValue = select.value;
+        const uniqueValues = new Set();
+
+        plants.forEach(plant => {
+            const val = plant[config.key];
+            if (val !== undefined && val !== null && val !== "") {
+                // Split multi-item strings (e.g. uses: "Ornamental, Air purifying")
+                if (typeof val === "string" && val.includes(",")) {
+                    val.split(",").forEach(item => uniqueValues.add(item.trim()));
+                } else {
+                    uniqueValues.add(String(val).trim());
+                }
+            }
+        });
+
+        // Sort options numerically if numbers, alphabetically otherwise
+        const sorted = Array.from(uniqueValues).sort((a, b) => {
+            const numA = parseFloat(a);
+            const numB = parseFloat(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b);
+        });
+
+        select.innerHTML = `<option value="">All ${config.label}s</option>` +
+            sorted.map(val => {
+                const displayVal = config.suffix ? `${val}${config.suffix}` : val;
+                return `<option value="${val}">${displayVal}</option>`;
+            }).join("");
+
+        // Preserve current selection if it still exists in dataset
+        if (sorted.includes(currentValue)) {
+            select.value = currentValue;
+        }
+    });
+}
+
+// Apply active drop-down filters to the current dataset
+function applyFilters() {
+    const filtered = currentFetchedPlants.filter(plant => {
+        return FILTER_CONFIG.every(config => {
+            const select = document.getElementById(`filter-${config.key}`);
+            if (!select || !select.value) return true;
+
+            const filterVal = select.value.toLowerCase();
+            const plantVal = String(plant[config.key] || "").toLowerCase();
+
+            return plantVal.includes(filterVal);
+        });
+    });
+
+    displayPlants(filtered);
+}
+
+// Clear all active filter selections
+function clearAllFilters() {
+    FILTER_CONFIG.forEach(config => {
+        const select = document.getElementById(`filter-${config.key}`);
+        if (select) select.value = "";
+    });
+    applyFilters();
+}
+
+
+// GET ALL PLANTS
 async function loadPlants() {
     const plantList = document.getElementById("plantList");
-
     plantList.innerHTML = "<p class=\"loading-text\">Loading plants...</p>";
 
     try {
         const data = await fetchAPI("/plants");
-
-        displayPlants(data.plants);
-    }
-
-    catch (error) {
+        currentFetchedPlants = data.plants || [];
+        populateFilterOptions(currentFetchedPlants);
+        applyFilters();
+    } catch (error) {
         console.error("Failed to load plants:", error);
-
-        plantList.innerHTML =
-            "<p>Unable to connect to the API.</p>";
+        plantList.innerHTML = "<p>Unable to connect to the API.</p>";
     }
 }
 
-
-// HELPERS
-
-function slugify(text) {
-    return text.toLowerCase().trim().replace(/\s+/g, '-');
-}
-
-function toxicityClass(text) {
-    const t = (text || "").toLowerCase();
-    if (t.includes("non-toxic")) return "tox-safe";
-    if (t.includes("toxic")) return "tox-warn";
-    return "";
+// RESET SEARCH & RE-LOAD ALL
+function resetAndLoadAll() {
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) searchInput.value = "";
+    clearAllFilters();
+    loadPlants();
 }
 
 
 // DISPLAY PLANTS
+function slugify(text) {
+    return text.toLowerCase().trim().replace(/\s+/g, '-');
+}
 
 function displayPlants(plants) {
     const plantList = document.getElementById("plantList");
-
     plantList.innerHTML = "";
 
     if (!plants || plants.length === 0) {
-        plantList.innerHTML = "<p>No plants found.</p>";
+        plantList.innerHTML = "<p>No plants found matching your criteria.</p>";
         return;
     }
 
     plants.forEach(plant => {
-
         const card = document.createElement("div");
-
         card.className = "plant-card";
 
         card.innerHTML = `
@@ -82,25 +169,22 @@ function displayPlants(plants) {
             </div>
 
             <div class="plant-card-body">
-                <span class="plant-tag">${plant.family}</span>
-
                 <h3>${plant.common_name}</h3>
 
                 <p class="plant-scientific">
                     ${plant.scientific_name}
                 </p>
 
-                <div class="plant-meta">
-                    <span class="meta-item"><span class="meta-icon">${ICON_SUN}</span>${plant.sunlight}</span>
-                    <span class="meta-item"><span class="meta-icon">${ICON_DROP}</span>${plant.water_requirement}</span>
-                </div>
+                <p class="plant-family">
+                    ${plant.family}
+                </p>
 
                 <p class="plant-description">
                     ${plant.description}
                 </p>
 
                 <button onclick="viewPlant(${plant.id})">
-                    View details
+                    View Details
                 </button>
             </div>
         `;
@@ -111,9 +195,7 @@ function displayPlants(plants) {
 
 
 // GET ONE PLANT
-
 async function viewPlant(id) {
-
     try {
         const plant = await fetchAPI(`/plants/${id}`);
 
@@ -133,35 +215,30 @@ async function viewPlant(id) {
         modalImage.alt = plant.common_name;
 
         modalContent.innerHTML = `
-            <span class="plant-tag">${plant.family}</span>
             <h2>${plant.common_name}</h2>
             <p class="modal-scientific">${plant.scientific_name}</p>
 
-            <div class="plant-meta modal-quickfacts">
-                <span class="meta-item"><span class="meta-icon">${ICON_SUN}</span>${plant.sunlight}</span>
-                <span class="meta-item"><span class="meta-icon">${ICON_DROP}</span>${plant.water_requirement}</span>
-            </div>
-
+            <div class="modal-row"><span>Family</span><span>${plant.family}</span></div>
             <div class="modal-row"><span>Genus</span><span>${plant.genus}</span></div>
-            <div class="modal-row"><span>Plant type</span><span>${plant.plant_type}</span></div>
+            <div class="modal-row"><span>Plant Type</span><span>${plant.plant_type}</span></div>
             <div class="modal-row"><span>Origin</span><span>${plant.origin}</span></div>
             <div class="modal-row"><span>Habitat</span><span>${plant.habitat}</span></div>
             <div class="modal-row"><span>Lifespan</span><span>${plant.lifespan}</span></div>
             <div class="modal-row"><span>Height</span><span>${plant.height_m} m</span></div>
             <div class="modal-row"><span>Spread</span><span>${plant.spread_m} m</span></div>
-            <div class="modal-row"><span>Soil type</span><span>${plant.soil_type}</span></div>
-            <div class="modal-row"><span>Flower color</span><span>${plant.flower_color}</span></div>
-            <div class="modal-row"><span>Flowering season</span><span>${plant.flowering_season}</span></div>
+            <div class="modal-row"><span>Sunlight</span><span>${plant.sunlight}</span></div>
+            <div class="modal-row"><span>Water</span><span>${plant.water_requirement}</span></div>
+            <div class="modal-row"><span>Soil Type</span><span>${plant.soil_type}</span></div>
+            <div class="modal-row"><span>Flower Color</span><span>${plant.flower_color}</span></div>
+            <div class="modal-row"><span>Flowering Season</span><span>${plant.flowering_season}</span></div>
             <div class="modal-row"><span>Uses</span><span>${plant.uses}</span></div>
-            <div class="modal-row"><span>Toxicity</span><span class="${toxicityClass(plant.toxicity)}">${plant.toxicity}</span></div>
+            <div class="modal-row"><span>Toxicity</span><span>${plant.toxicity}</span></div>
 
             <p class="modal-description">${plant.description}</p>
         `;
 
         openModal();
-    }
-
-    catch (error) {
+    } catch (error) {
         console.error("Failed to retrieve plant:", error);
         alert("Unable to retrieve plant.");
     }
@@ -177,7 +254,7 @@ function closeModal() {
     if (modal) modal.classList.remove("open");
 }
 
-// close modal on overlay click or Escape key
+// Close modal on overlay click or Escape key
 const plantModalEl = document.getElementById("plantModal");
 if (plantModalEl) {
     plantModalEl.addEventListener("click", function(event) {
@@ -191,12 +268,8 @@ document.addEventListener("keydown", function(event) {
 
 
 // SEARCH PLANTS
-
 async function searchPlants() {
-
-    const searchInput =
-        document.getElementById("searchInput");
-
+    const searchInput = document.getElementById("searchInput");
     const query = searchInput.value.trim();
 
     // Empty search = show everything
@@ -205,34 +278,23 @@ async function searchPlants() {
         return;
     }
 
-    const plantList =
-        document.getElementById("plantList");
-
+    const plantList = document.getElementById("plantList");
     plantList.innerHTML = "<p class=\"loading-text\">Searching...</p>";
 
     try {
-
-        const data =
-            await fetchAPI(
-                `/plants/search?q=${encodeURIComponent(query)}`
-            );
-
-        displayPlants(data.results);
-
-    }
-
-    catch (error) {
-
+        const data = await fetchAPI(`/plants/search?q=${encodeURIComponent(query)}`);
+        currentFetchedPlants = data.results || [];
+        populateFilterOptions(currentFetchedPlants);
+        applyFilters();
+    } catch (error) {
         console.error("Search failed:", error);
-
-        plantList.innerHTML =
-            "<p>Search failed. Please try again.</p>";
+        plantList.innerHTML = "<p>Search failed. Please try again.</p>";
     }
 }
 
 
 // START APPLICATION
-
+initFilterControls();
 loadPlants();
 
 const searchInputEl = document.getElementById("searchInput");

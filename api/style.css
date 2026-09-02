@@ -26,13 +26,30 @@ body {
 }
 
 header {
-    background: var(--color-forest);
+    position: relative;
+    background-image: url('images/hero-bg.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
     color: #F3F1E4;
-    padding: 48px 20px;
+    padding: 60px 20px;
     border-bottom: 4px solid var(--color-accent);
+    overflow: hidden;
+}
+
+/* Translucent blurred overlay layer */
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(31, 46, 28, 0.65); /* Semi-transparent dark green tint */
+    backdrop-filter: blur(8px); /* Blurs the background image behind it */
+    -webkit-backdrop-filter: blur(8px); /* Safari support */
+    z-index: 1;
 }
 
 .brand {
+    position: relative;
+    z-index: 2; /* Lifts content above the blurred overlay layer */
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
@@ -64,10 +81,130 @@ main {
     padding: 0 20px;
 }
 
+.search-container {
+    margin-bottom: 36px;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
 .search {
     display: flex;
     gap: 10px;
-    margin-bottom: 36px;
+    margin-bottom: 20px;
+}
+
+/* Filters Layout */
+.filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+}
+
+.filters-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filters-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-ink-muted);
+}
+
+.flter-group select:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+/* Filter Section Header */
+.filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--color-line);
+}
+
+.filter-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-ink);
+}
+
+.reset-filters-btn {
+    background: transparent;
+    color: var(--color-accent);
+    padding: 0;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+}
+
+.reset-filters-btn:hover {
+    background: transparent;
+    color: var(--color-ink);
+    transform: none;
+}
+
+/* Checkbox Chip Buttons */
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari / iOS Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE / Legacy Edge */
+    user-select: none;         /* Standard */
+}
+
+.filter-chip input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.filter-chip span {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border: 1px solid var(--color-line);
+    border-radius: 20px;
+    background: var(--color-card);
+    color: var(--color-ink);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Tick mark indicator when checked */
+.filter-chip input[type="checkbox"]:checked + span {
+    background: var(--color-forest);
+    color: white;
+    border-color: var(--color-forest);
+}
+
+.filter-chip input[type="checkbox"]:checked + span::before {
+    content: "✓";
+    font-weight: bold;
+}
+
+.filter-chip:hover span {
+    border-color: var(--color-accent);
 }
 
 .search input {
