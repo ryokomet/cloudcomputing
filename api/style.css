@@ -151,13 +151,14 @@ h2 {
 /* Plant grid */
 .plant-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
 }
 
 /* Plant cards */
 .plant-card {
     background: var(--color-card);
+    width: 100%;
     border: 1px solid var(--color-line);
     border-radius: var(--radius);
     overflow: hidden;
@@ -423,5 +424,17 @@ footer {
     * {
         transition: none !important;
         animation: none !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .plant-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .plant-list {
+        grid-template-columns: 1fr;
     }
 }
